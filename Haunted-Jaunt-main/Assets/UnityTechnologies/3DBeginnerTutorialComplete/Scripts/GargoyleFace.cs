@@ -4,7 +4,7 @@ public class GargoyleFacing : MonoBehaviour
 {
     public Transform player;
     public float detectionRadius = 10f;
-    public float rotationSpeed = 2f;
+    public float rotationSpeed = 1f;
 
     void Update()
     {
@@ -18,8 +18,13 @@ public class GargoyleFacing : MonoBehaviour
 
             // Use dot product to determine how much the gargoyle is already facing the player
             float dot = Vector3.Dot(transform.forward, toPlayerFlat);
-            Quaternion targetRotation = Quaternion.LookRotation(toPlayerFlat);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            // Only rotate if it is not already well-aligned
+            if (dot < 0.99f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(toPlayerFlat);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
         }
     }
 }
